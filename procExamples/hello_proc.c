@@ -18,7 +18,9 @@ int read_proc(struct file *filp,char *buf,size_t count,loff_t *offp )
 	}
 	temp=temp-count;
 	copy_to_user(buf,msg, count);
-	if(count==0) temp=len;
+	if(count==0) {
+		temp=len;
+	}	
 	   
 	return count;
 }
