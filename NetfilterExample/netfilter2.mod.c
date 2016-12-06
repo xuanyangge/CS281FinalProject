@@ -17,9 +17,11 @@ __attribute__((section(".gnu.linkonce.this_module"))) = {
 static const struct modversion_info ____versions[]
 __used
 __attribute__((section("__versions"))) = {
-	{ 0xc6c01fa, __VMLINUX_SYMBOL_STR(module_layout) },
-	{ 0xb5c14096, __VMLINUX_SYMBOL_STR(nf_unregister_hook) },
-	{ 0x9e29f788, __VMLINUX_SYMBOL_STR(nf_register_hook) },
+	{ 0x5c7202ab, __VMLINUX_SYMBOL_STR(module_layout) },
+	{ 0x138fe6fb, __VMLINUX_SYMBOL_STR(nf_unregister_hook) },
+	{ 0x7ed82276, __VMLINUX_SYMBOL_STR(nf_register_hook) },
+	{ 0xdb7305a1, __VMLINUX_SYMBOL_STR(__stack_chk_fail) },
+	{ 0x28318305, __VMLINUX_SYMBOL_STR(snprintf) },
 	{ 0x27e1a049, __VMLINUX_SYMBOL_STR(printk) },
 	{ 0xbdfb6dbb, __VMLINUX_SYMBOL_STR(__fentry__) },
 };
@@ -30,4 +32,4 @@ __attribute__((section(".modinfo"))) =
 "depends=";
 
 
-MODULE_INFO(srcversion, "75B6A5FE91CBF8D28F03CFF");
+MODULE_INFO(srcversion, "CF8F2872E6500CA7ABDE564");

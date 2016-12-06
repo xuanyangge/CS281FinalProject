@@ -18,8 +18,8 @@ static const struct modversion_info ____versions[]
 __used
 __attribute__((section("__versions"))) = {
 	{ 0xc6c01fa, __VMLINUX_SYMBOL_STR(module_layout) },
-	{ 0xeb346931, __VMLINUX_SYMBOL_STR(nf_unregister_hook) },
-	{ 0x1ca6466d, __VMLINUX_SYMBOL_STR(nf_register_hook) },
+	{ 0xb5c14096, __VMLINUX_SYMBOL_STR(nf_unregister_hook) },
+	{ 0x9e29f788, __VMLINUX_SYMBOL_STR(nf_register_hook) },
 	{ 0x27e1a049, __VMLINUX_SYMBOL_STR(printk) },
 	{ 0xbdfb6dbb, __VMLINUX_SYMBOL_STR(__fentry__) },
 };

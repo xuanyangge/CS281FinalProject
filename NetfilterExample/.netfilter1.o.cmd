@@ -1113,6 +1113,63 @@ deps_/home/vagrant/Desktop/Kernel_Module_Project/CS281FinalProject/NetfilterExam
   include/uapi/linux/netfilter/nf_conntrack_tuple_common.h \
   include/linux/netfilter_ipv4.h \
   include/uapi/linux/netfilter_ipv4.h \
+  include/linux/udp.h \
+  include/net/inet_sock.h \
+    $(wildcard include/config/inet.h) \
+  include/linux/jhash.h \
+  include/linux/unaligned/packed_struct.h \
+  include/net/sock.h \
+    $(wildcard include/config/net.h) \
+  include/linux/uaccess.h \
+  include/linux/page_counter.h \
+  include/linux/memcontrol.h \
+    $(wildcard include/config/memcg/swap.h) \
+  include/linux/vmpressure.h \
+  include/linux/eventfd.h \
+    $(wildcard include/config/eventfd.h) \
+  include/linux/writeback.h \
+  include/linux/flex_proportions.h \
+  include/linux/backing-dev-defs.h \
+    $(wildcard include/config/debug/fs.h) \
+  include/linux/bio.h \
+  include/linux/highmem.h \
+  arch/x86/include/asm/cacheflush.h \
+    $(wildcard include/config/debug/rodata/test.h) \
+  include/asm-generic/cacheflush.h \
+  include/linux/mempool.h \
+  include/linux/ioprio.h \
+  include/linux/iocontext.h \
+  include/linux/filter.h \
+    $(wildcard include/config/bpf/jit.h) \
+  include/net/sch_generic.h \
+  include/uapi/linux/pkt_cls.h \
+  include/net/gen_stats.h \
+  include/uapi/linux/gen_stats.h \
+  include/linux/rtnetlink.h \
+    $(wildcard include/config/net/ingress.h) \
+  include/uapi/linux/rtnetlink.h \
+  include/uapi/linux/if_addr.h \
+  include/net/rtnetlink.h \
+  include/net/netlink.h \
+  include/uapi/linux/filter.h \
+  include/uapi/linux/bpf_common.h \
+  include/uapi/linux/bpf.h \
+  include/linux/rculist_nulls.h \
+  include/linux/poll.h \
+  include/uapi/linux/poll.h \
+  arch/x86/include/uapi/asm/poll.h \
+  include/uapi/asm-generic/poll.h \
+  include/net/dst.h \
+  include/net/neighbour.h \
+  include/net/tcp_states.h \
+  include/uapi/linux/net_tstamp.h \
+  include/net/request_sock.h \
+  include/net/netns/hash.h \
+  include/uapi/linux/udp.h \
+  include/linux/ip.h \
+  include/uapi/linux/ip.h \
+  include/linux/inet.h \
+  include/linux/proc_fs.h \
 
 /home/vagrant/Desktop/Kernel_Module_Project/CS281FinalProject/NetfilterExample/netfilter1.o: $(deps_/home/vagrant/Desktop/Kernel_Module_Project/CS281FinalProject/NetfilterExample/netfilter1.o)
 
