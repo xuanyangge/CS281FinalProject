@@ -71,8 +71,9 @@ static ssize_t write_proc (struct file *filp, const char __user * buf, size_t co
 	return -EFAULT;
   }
 
-  printk(KERN_INFO "read data:\n%s\n",msg);
-  printk(KERN_INFO "count is %d\n", count);
+  // for debug purpose
+  // printk(KERN_INFO "read data:\n%s\n",msg);
+  // printk(KERN_INFO "count is %d\n", count);
   
   len = count;
   temp += len;
@@ -81,27 +82,31 @@ static ssize_t write_proc (struct file *filp, const char __user * buf, size_t co
     in_index=0;
     out_index= 0;
     ipindex=0;
+
     return count;
   }
 
   if (msg[0] == '0'|| msg[0] == '2') { 
     iniplist[in_index] = kmalloc((count-2)*sizeof(char) , GFP_KERNEL);
+    allip[ipindex+count-1] = 0;
     strcpy(iniplist[in_index], &allip[ipindex+2]);
+    printk("iniplist[0] length: %d\n", strlen(iniplist[in_index]));
     in_index += 1;
   }
   
 
   if (msg[0] == '1'|| msg[0] == '2') {
     outiplist[out_index] = kmalloc((count-2)*sizeof(char) , GFP_KERNEL);
+    allip[ipindex+count-1] = 0;
     strcpy(outiplist[out_index], &allip[ipindex+2]);
     out_index += 1;
-
   }
-
-  printk(KERN_INFO "current allip: %s\n", allip);
-  printk(KERN_INFO "current ipindex: %d\n", ipindex);
-  printk(KERN_INFO "current inip: %s\n", iniplist[in_index-1]);
-  printk(KERN_INFO "current outip: %s\n", outiplist[out_index-1]);
+  
+  // for debug purpose
+  // printk(KERN_INFO "current allip: %s\n", allip);
+  // printk(KERN_INFO "current ipindex: %d\n", ipindex);
+  // printk(KERN_INFO "current inip: %s\n", iniplist[in_index-1]);
+  // printk(KERN_INFO "current outip: %s\n", outiplist[out_index-1]);
 
   
   ipindex += count;
@@ -127,31 +132,33 @@ unsigned int hook_func(unsigned int hooknum, struct sk_buff *skb, const struct n
  
  
         ip_header = ip_hdr(sock_buff);    //grab network header using accessor
-        
-
 
 	char source[50];
 	char destination[50];
 	snprintf(source, 50, "%pI4", &ip_header->saddr);
 	snprintf(destination, 50, "%pI4", &ip_header->daddr);
 
-
-	printk(KERN_INFO "got source address: %s\n", source); 
-	printk(KERN_INFO "got destination address: %s\n", destination); 
+	// for debug purpose
+	// printk(KERN_INFO "got source address: %s\n", source); 
+	// printk(KERN_INFO "got destination address: %s\n", destination); 
+	
+	// for debug purpose
+	// printk("length of source: %d\n", strlen(source));
+    	// printk("iniplist[0] length: %d\n", strlen(iniplist[0]));
 	
 
 	// if the source address and destination address is in the proc file, drop it;
 	int i;
         for(i =0; i < in_index;i++){
           if(strcmp(source,iniplist[i])==0){
-            printk("Drop packet from ..%s\n",source);
+            printk("Drop incoming packet from %s\n",source);
             return NF_DROP;
           }
         }
         
         for(i=0; i< out_index;i++){
           if(strcmp(destination,outiplist[i])==0){
-            printk("Drop packet to ..%s\n",destination);
+            printk("Drop outgoing packet to %s\n",destination);
             return NF_DROP;
           }
         }             
