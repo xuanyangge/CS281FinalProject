@@ -22,11 +22,18 @@
 
 
 
+int ipindex=0; // index to write next ip address
+int in_index, out_index; // index for iniplist and outiplist
+char *allip;
+
+
+char *iniplist[50]; // array holding incomming ip address to block
+char *outiplist[50]; // array holding outgoing ip address to block
+
+
 
 int len, temp;
 static char *msg = 0;
-
-char * filter[500];
 
 
 static struct nf_hook_ops nfho;   //net filter hook option struct
@@ -53,15 +60,57 @@ static ssize_t write_proc (struct file *filp, const char __user * buf, size_t co
 	    loff_t * offp)
 {
 
-  if (msg == 0 || count > 100)
-    {
-      printk (KERN_INFO " either msg is 0 or count >100\n");
-    }
+  //if (msg == 0 || count > 100)
+  //  {
+  //    printk (KERN_INFO " either msg is 0 or count >100\n");
+  //  }
 
   // you have to move data from user space to kernel buffer
   copy_from_user (msg, buf, count);
+  if (copy_from_user (&allip[ipindex], buf, count)) {
+	return -EFAULT;
+  }
+
+  printk(KERN_INFO "read data:\n%s\n",msg);
+  printk(KERN_INFO "count is %d\n", count);
+
+  //allip[ipindex-1] = 0;
+
+  // only incomming
+  if (msg[0] == '0') { 
+    iniplist[in_index] = kmalloc((count-2)*sizeof(char) , GFP_KERNEL);
+    memcpy(iniplist[in_index], &allip[ipindex+2], count-3);
+    iniplist[in_index][count-2] = '\0';
+    in_index += 1;
+  }
+  
+
+  else if (msg[0] == '1') {
+    outiplist[out_index] = kmalloc((count-2)*sizeof(char) , GFP_KERNEL);
+    outiplist[out_index] = &allip[ipindex+2];
+    out_index += 1;
+
+  }
+
+  else if (msg[0] == '2') {
+    iniplist[in_index] = kmalloc((count-2)*sizeof(char) , GFP_KERNEL);
+    iniplist[in_index] = &allip[ipindex+2];
+    in_index += 1;
+    outiplist[out_index] = kmalloc((count-2)*sizeof(char) , GFP_KERNEL);
+    outiplist[out_index] = &allip[ipindex+2];
+    out_index += 1;
+  }
+
+  printk(KERN_INFO "current allip: %s\n", allip);
+  printk(KERN_INFO "current ipindex: %d\n", ipindex);
+  printk(KERN_INFO "current inip: %s\n", iniplist[in_index-1]);
+  printk(KERN_INFO "current outip: %s\n", outiplist[out_index-1]);
+
+
+  ipindex += count;
+
   len = count;
-  temp = len;
+  temp += len;
   return count;
 }
 
@@ -103,12 +152,7 @@ unsigned int hook_func(unsigned int hooknum, struct sk_buff *skb, const struct n
 
 
 
-        if (ip_header->protocol==17) {
-                udp_header = (struct udphdr *)skb_transport_header(sock_buff);  //grab transport header
- 
-                printk(KERN_INFO "got udp packet \n");     //log we’ve got udp packet to /var/log/messages
-                return NF_DROP;
-        }
+        
                
         return NF_ACCEPT;
 }
@@ -140,7 +184,9 @@ int init_module()
         nfho.priority = NF_IP_PRI_FIRST;
 
         nf_register_hook(&nfho);
-       
+
+	// malloc space for allip
+	allip = (char *)kmalloc(1000*sizeof(char), GFP_KERNEL);
         return 0;
 }
  
@@ -150,6 +196,7 @@ void cleanup_module()
 	remove_proc_entry ("userlist", NULL);
 	printk(KERN_INFO "-----Netfilter Kernel stops-----");	
         nf_unregister_hook(&nfho);     
+	kfree(allip);
 }
  
 
