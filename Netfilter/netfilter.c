@@ -1,8 +1,4 @@
-//’Hello World’ v2 netfilter hooks example
-//For any packet, get the ip header and check the protocol field
-//if the protocol number equal to UDP (17), log in var/log/messages
-//default action of module to let all packets through
- 
+
 
 #define __KERNEL__
 #define MODULE
