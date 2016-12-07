@@ -1,7 +1,7 @@
 # Netfilter Kernel Module
 
 ## Introduction
-This is a Linux Netfilter Kernel Module developed by Ziqi Yang (https://github.com/kenyangzq) and Xuanyang Ge (https://github.com/xuanyangge). It uses a /proc file named *userlist* to keep track of what network traffic to block. 
+This is a Linux Netfilter Kernel Module developed by Ziqi Yang (https://github.com/kenyangzq) and Xuanyang Ge (https://github.com/xuanyangge). It uses a /proc file named **userlist** to keep track of what network traffic to block. 
 
 To run the module, download the Netfilter folder and use 
 
@@ -45,7 +45,7 @@ command in the terminal to clear the list and use
 
 `echo "print" > /proc/userlist`
 
-command in the terminal to see the list of ip address.
+command in the terminal to print the list of ip address to dmesg. 
 
 ## Test and Output
 
