@@ -1,2 +1,0 @@
-/home/vagrant/Desktop/Kernel_Module_Project/CS281FinalProject/NetfilterExample/netfilter2.ko
-/home/vagrant/Desktop/Kernel_Module_Project/CS281FinalProject/NetfilterExample/netfilter2.o
