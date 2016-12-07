@@ -1,13 +1,13 @@
 # Netfilter Kernel Module
 
 ## Introduction
-This is a Linux Netfilter Kernel Module developed by Ziqi Yang ((https://github.com/kenyangzq) and Xuanyang Ge (https://github.com/xuanyangge). It uses a /proc file named userlist to keep track of what network traffic to block. 
+This is a Linux Netfilter Kernel Module developed by Ziqi Yang (https://github.com/kenyangzq) and Xuanyang Ge (https://github.com/xuanyangge). It uses a /proc file named *userlist* to keep track of what network traffic to block. 
 
 To run the module, download the Netfilter folder and use 
 
 `make`
 
-command in /CS281FinalProject/Netfilter directory to compile the code. Then open a terminal in Netfilter folder, and use
+command in **/CS281FinalProject/Netfilter** directory to compile the code. Then open a terminal in Netfilter folder, and use
 
 `sudo insmod netfilter.ko`
 
@@ -17,7 +17,13 @@ command to insert the kernel module. After inserting the module, run
 
 command should show that netfilter module has been loaded and the proc entry has been created. 
 
-## Input Format
+To remove the module, simply use
+
+`sudo rmmod netfilter`
+
+command in terminal.
+
+## Input Format and Functionality
 
 User should specify blocking incomming or outgoing or both direction and the ip address to block in the /proc/userlist file. User should input one ip address at a time, using format 
 
@@ -45,7 +51,7 @@ command in the terminal to see the list of ip address.
 
 To test the module, the simplest way is to ping the ip address in the terminal. 
 
-When the module detect the network packet, it will extract the ip address and compare it to those user specified. If a packet is blocked, information will be printed to the dmesg. User can check at anytime using `dmesg` command.  
+When the module detect the network packet, it will extract the ip address and compare it to those user specified. If a packet is blocked and dropped, information will be printed to the dmesg. User can check at anytime using `dmesg` or `dmesg | tail` command.  
 
 
 
