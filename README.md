@@ -2,6 +2,7 @@
 
 ## Introduction
 This is a Linux Netfilter Kernel Module developed by Ziqi Yang (https://github.com/kenyangzq) and Xuanyang Ge (https://github.com/xuanyangge). It uses a /proc file named **userlist** to keep track of what network traffic to block. 
+The module is maded and compiled in Linux v4.4.0-47.
 
 To run the module, download the Netfilter folder and use 
 
