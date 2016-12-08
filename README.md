@@ -4,6 +4,8 @@
 This is a Linux Netfilter Kernel Module developed by Ziqi Yang (https://github.com/kenyangzq) and Xuanyang Ge (https://github.com/xuanyangge). It uses a /proc file named **userlist** to keep track of what network traffic to block. 
 The module is maded and compiled in Linux v4.4.0-47.
 
+We are inspired by examples in http://tuxthink.blogspot.com/2013/10/creating-read-write-proc-entry-in.html and http://www.paulkiddie.com/2009/11/creating-a-netfilter-kernel-module-which-filters-udp-packets/
+
 To run the module, download the Netfilter folder and use 
 
 `make`
