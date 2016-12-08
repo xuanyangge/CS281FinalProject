@@ -29,7 +29,7 @@ char *outiplist[50]; // array holding outgoing ip address to block
 static char *msg = 0;
 
 
-static struct nf_hook_ops nfho;   //net filter hook option struct
+static struct nf_hook_ops nfho_in, nfho_out;   //net filter hook option struct
 struct sk_buff *sock_buff;
 
 
@@ -106,7 +106,8 @@ static ssize_t write_proc (struct file *filp, const char __user * buf, size_t co
     		iniplist[in_index] = kmalloc((count-2)*sizeof(char) , GFP_KERNEL);
     		allip[ipindex+count-1] = 0;
     		strcpy(iniplist[in_index], &allip[ipindex+2]);
-    		in_index += 1;
+		printk("Adding ip address %s to incomming target list\n", iniplist[in_index]);
+		in_index += 1;
   	}
   
 
@@ -114,6 +115,7 @@ static ssize_t write_proc (struct file *filp, const char __user * buf, size_t co
     		outiplist[out_index] = kmalloc((count-2)*sizeof(char) , GFP_KERNEL);
     		allip[ipindex+count-1] = 0;
     		strcpy(outiplist[out_index], &allip[ipindex+2]);
+		printk("Adding ip address %s to outgoing target list\n", outiplist[out_index]);
     		out_index += 1;
   	}
   
@@ -137,7 +139,7 @@ static const struct file_operations proc_fops = {
 
 
  
-unsigned int hook_func(unsigned int hooknum, struct sk_buff *skb, const struct net_device *in, 
+unsigned int hook_func_in(unsigned int hooknum, struct sk_buff *skb, const struct net_device *in, 
 			const struct net_device *out, int (*okfn)(struct sk_buff *))
 {
 	struct iphdr *ip_header;            //ip header struct
@@ -149,9 +151,7 @@ unsigned int hook_func(unsigned int hooknum, struct sk_buff *skb, const struct n
         ip_header = ip_hdr(sock_buff);    //grab network header using accessor
 
 	char source[50];
-	char destination[50];
 	snprintf(source, 50, "%pI4", &ip_header->saddr);
-	snprintf(destination, 50, "%pI4", &ip_header->daddr);
 
 	// for debug purpose
 	// printk(KERN_INFO "got source address: %s\n", source); 
@@ -170,6 +170,37 @@ unsigned int hook_func(unsigned int hooknum, struct sk_buff *skb, const struct n
             return NF_DROP;
           }
         }
+        
+        
+        return NF_ACCEPT;
+}
+
+
+unsigned int hook_func_out(unsigned int hooknum, struct sk_buff *skb, const struct net_device *in, 
+			const struct net_device *out, int (*okfn)(struct sk_buff *))
+{
+	struct iphdr *ip_header;            //ip header struct
+
+        sock_buff = skb;
+        if(!sock_buff) { return NF_ACCEPT;}
+ 
+ 
+        ip_header = ip_hdr(sock_buff);    //grab network header using accessor
+
+	char destination[50];
+	snprintf(destination, 50, "%pI4", &ip_header->daddr);
+
+	// for debug purpose
+	// printk(KERN_INFO "got source address: %s\n", source); 
+	// printk(KERN_INFO "got destination address: %s\n", destination); 
+	
+	// for debug purpose
+	// printk("length of source: %d\n", strlen(source));
+    	// printk("iniplist[0] length: %d\n", strlen(iniplist[0]));
+	
+
+	// if the source address and destination address is in the proc file, drop it;
+	int i;
         
         for(i=0; i< out_index;i++){
           if(strcmp(destination,outiplist[i])==0){
@@ -199,13 +230,20 @@ int init_module()
 	create_new_proc_entry ();
 	printk(KERN_INFO "-----Proc entry created-----");
 
-	
-        nfho.hook = hook_func;
-        nfho.hooknum = NF_INET_PRE_ROUTING;
-        nfho.pf = PF_INET;
-        nfho.priority = NF_IP_PRI_FIRST;
+	// register hook for incoming traffic
+        nfho_in.hook = hook_func_in;
+        nfho_in.hooknum = NF_INET_LOCAL_IN;
+        nfho_in.pf = PF_INET;
+        nfho_in.priority = NF_IP_PRI_FIRST;
 
-        nf_register_hook(&nfho);
+	// register hook for outgoing traffic
+	nfho_out.hook = hook_func_out;
+        nfho_out.hooknum = NF_INET_LOCAL_OUT;
+        nfho_out.pf = PF_INET;
+        nfho_out.priority = NF_IP_PRI_FIRST;
+
+        nf_register_hook(&nfho_in);
+        nf_register_hook(&nfho_out);
 
 	printk(KERN_INFO "-----Netfilter starts-----");	
 
@@ -222,7 +260,8 @@ void cleanup_module()
 	printk(KERN_INFO "-----Proc entry removed-----");	
 	remove_proc_entry ("userlist", NULL);
 	printk(KERN_INFO "-----Netfilter stops-----");	
-        nf_unregister_hook(&nfho);     
+        nf_unregister_hook(&nfho_in);     
+	nf_unregister_hook(&nfho_out);   
 	kfree(allip);
 }
  
