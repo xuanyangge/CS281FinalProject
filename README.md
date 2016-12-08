@@ -58,9 +58,10 @@ To test the module, the simplest way is to ping the ip address in the terminal.
 
 When the module detect the network packet, it will extract the ip address and compare it to those user specified. If a packet is blocked and dropped, information will be printed to the dmesg. User can check at anytime using `dmesg` or `dmesg | tail` command.  
 
+One sample output is below: 
 
 
-
+<img src="./image.png" width="400">
 
 
 
