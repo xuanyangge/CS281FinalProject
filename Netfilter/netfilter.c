@@ -98,6 +98,7 @@ static ssize_t write_proc (struct file *filp, const char __user * buf, size_t co
     		in_index=0;
     		out_index=0;
     		ipindex=0;		
+		printk("All ip addresses in the list are removed\n");
     		return count;
   	}
 
